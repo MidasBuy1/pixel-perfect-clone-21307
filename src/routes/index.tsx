@@ -16,7 +16,7 @@ import {
   VolumeX,
   Zap,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import afterglowAudio from "@/assets/audio/afterglow.mp3.asset.json";
 import lostInTheBeatAudio from "@/assets/audio/lost-in-the-beat.mp3.asset.json";
@@ -58,6 +58,13 @@ function Index() {
   const [repeat, setRepeat] = useState(false);
   const [playlistOpen, setPlaylistOpen] = useState(false);
   const track = tracks[trackIndex] ?? defaultTrack;
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = volume / 100;
+    audio.muted = volume === 0;
+  }, [volume]);
 
   const formatTime = (seconds: number) => {
     if (!Number.isFinite(seconds)) return "00:00";
@@ -236,13 +243,13 @@ function Index() {
             <Button variant="player" className={repeat ? "bg-primary text-primary-foreground" : ""} aria-label="Repeat" aria-pressed={repeat} onClick={() => setRepeat((enabled) => !enabled)}><Repeat2 className="size-5" /></Button>
           </div>
 
-          <label className="mt-6 flex items-center gap-4">
+          <div className="mt-6 flex items-center gap-4">
             <Button type="button" variant="ghost" size="icon" className="size-7" aria-label={volume === 0 ? "Unmute" : "Mute"} onClick={toggleMute}>
               {volume === 0 ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
             </Button>
             <input className="player-range w-full" aria-label="Volume" type="range" min="0" max="100" value={volume} onChange={(event) => setAudioVolume(Number(event.target.value))} />
             <Volume2 className="size-6 fill-current" aria-hidden="true" />
-          </label>
+          </div>
         </div>
       </section>
 
