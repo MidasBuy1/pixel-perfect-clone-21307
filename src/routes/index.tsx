@@ -57,9 +57,14 @@ function Index() {
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
   const autoPlay = useRef(false);
+  const seekingRef = useRef(false);
   const track = tracks[index] ?? tracks[0]!;
 
   useEffect(() => { if (audioRef.current) audioRef.current.volume = muted ? 0 : volume; }, [volume, muted]);
+  useEffect(() => {
+    const a = audioRef.current;
+    if (a && a.readyState >= 1 && Number.isFinite(a.duration)) setDuration(a.duration);
+  }, [index]);
   useEffect(() => {
     setCurrentTime(0);
     if (autoPlay.current) audioRef.current?.play().catch(() => {});
@@ -137,8 +142,9 @@ function Index() {
             preload="metadata"
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
-            onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+            onTimeUpdate={(e) => { if (!seekingRef.current) setCurrentTime(e.currentTarget.currentTime); }}
             onLoadedMetadata={(e) => { setDuration(e.currentTarget.duration); e.currentTarget.volume = muted ? 0 : volume; }}
+            onDurationChange={(e) => { if (Number.isFinite(e.currentTarget.duration)) setDuration(e.currentTarget.duration); }}
             onEnded={onEnded}
           />
           <div className="relative flex items-center justify-between">
@@ -161,9 +167,11 @@ function Index() {
           <p className="mt-1 text-sm text-primary" dir="auto">{track.artist}</p>
 
           <div className="mt-7">
-            <input type="range" aria-label="Seek" className="player-range w-full" min={0} max={duration || 0} step={0.1} value={currentTime}
+            <input type="range" aria-label="Seek" className="player-range w-full" min={0} max={duration || 0} step={0.1} value={Math.min(currentTime, duration || 0)}
               style={{ ["--value" as string]: `${duration ? (currentTime / duration) * 100 : 0}%` }}
-              onChange={(e) => { const v = Number(e.target.value); if (audioRef.current) audioRef.current.currentTime = v; setCurrentTime(v); }} />
+              onPointerDown={() => { seekingRef.current = true; }}
+              onPointerUp={() => { seekingRef.current = false; }}
+              onChange={(e) => { const v = Number(e.target.value); const a = audioRef.current; if (a && Number.isFinite(v)) { a.currentTime = v; } setCurrentTime(v); }} />
           </div>
           <div className="mt-1 flex justify-between text-[11px] font-medium"><span>{formatTime(currentTime)}</span><span>{formatTime(duration)}</span></div>
 
