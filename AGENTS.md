@@ -11,3 +11,4 @@
 
 - Use a single immersive music-player screen with semantic pink-glass design tokens; this preserves the uploaded visual reference across responsive layouts.
 - Use only audio files supplied by the user as playback sources; this keeps the restored player independent of third-party embeds.
+- Store each track's artwork with its track data and render it as the full-screen background; this keeps song and artwork changes synchronized.
