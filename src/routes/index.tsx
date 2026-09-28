@@ -57,7 +57,7 @@ function Index() {
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
   const autoPlay = useRef(false);
-  const track = tracks[index];
+  const track = tracks[index] ?? tracks[0]!;
 
   useEffect(() => { if (audioRef.current) audioRef.current.volume = muted ? 0 : volume; }, [volume, muted]);
   useEffect(() => {
