@@ -62,6 +62,10 @@ function Index() {
 
   useEffect(() => { if (audioRef.current) audioRef.current.volume = muted ? 0 : volume; }, [volume, muted]);
   useEffect(() => {
+    const a = audioRef.current;
+    if (a && a.readyState >= 1 && Number.isFinite(a.duration)) setDuration(a.duration);
+  }, [index]);
+  useEffect(() => {
     setCurrentTime(0);
     if (autoPlay.current) audioRef.current?.play().catch(() => {});
   }, [index]);
