@@ -4,7 +4,6 @@ import {
   Heart,
   ListMusic,
   Music2,
-  Pause,
   Play,
   Repeat2,
   ShieldCheck,
@@ -19,9 +18,6 @@ import { useState } from "react";
 
 import musicBackground from "@/assets/music-background.jpg";
 import { Button } from "@/components/ui/button";
-
-const spotifyPlaylistUrl = "https://open.spotify.com/playlist/2FduSKNsipwbVXNzPEsVAk";
-const spotifyEmbedUrl = "https://open.spotify.com/embed/playlist/2FduSKNsipwbVXNzPEsVAk?utm_source=generator&theme=0";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -90,45 +86,33 @@ function Index() {
               <ListMusic className="size-5" />
             </Button>
             {playlistOpen && (
-              <div className="absolute right-0 top-12 z-30 w-[min(22rem,calc(100vw-3rem))] overflow-hidden rounded-lg border border-player-border bg-player-panel/95 p-2 shadow-player-panel backdrop-blur-xl">
-                <iframe
-                  title="Spotify playlist"
-                  src={spotifyEmbedUrl}
-                  width="100%"
-                  height="352"
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                  loading="eager"
-                  className="block w-full rounded-md border-0"
-                />
-                <Button variant="ghost" className="mt-1 h-8 w-full rounded-md text-xs" asChild>
-                  <a href={spotifyPlaylistUrl} target="_blank" rel="noreferrer">Open in Spotify</a>
-                </Button>
+              <div className="absolute right-0 top-12 z-30 w-[min(22rem,calc(100vw-3rem))] rounded-lg border border-player-border bg-player-panel/95 px-6 py-8 text-center shadow-player-panel backdrop-blur-xl">
+                <Music2 className="mx-auto size-8 text-primary" />
+                <p className="mt-3 text-sm font-semibold">No songs uploaded yet</p>
               </div>
             )}
           </div>
-          <h2 className="mt-2 text-3xl font-bold">ANU Spotify Playlist</h2>
-          <p className="mt-1 text-sm text-primary">Spotify</p>
+          <h2 className="mt-2 text-3xl font-bold">Lost in the Beat</h2>
+          <p className="mt-1 text-sm text-primary">ANU Music</p>
 
           <div className="mt-7">
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-player-surface/70">
-              <div className="h-full w-[34%] rounded-full bg-primary" />
+              <div className="h-full w-0 rounded-full bg-primary" />
             </div>
           </div>
-          <div className="mt-1 flex justify-between text-[11px] font-medium"><span>01:24</span><span>03:45</span></div>
+          <div className="mt-1 flex justify-between text-[11px] font-medium"><span>00:00</span><span>00:00</span></div>
 
           <div className="mt-5 flex justify-center gap-3 text-[10px] font-semibold uppercase tracking-[0.12em]">
-            <span className="flex items-center gap-2 rounded-full border border-player-border bg-player-surface/50 px-3 py-1.5"><Music2 className="size-3 text-primary" /> Spotify</span>
+            <span className="flex items-center gap-2 rounded-full border border-player-border bg-player-surface/50 px-3 py-1.5"><Music2 className="size-3 text-primary" /> 320 KBPS</span>
             <span className="flex items-center gap-2 rounded-full border border-player-border bg-player-surface/50 px-3 py-1.5"><b className="text-primary">HQ</b> High quality</span>
           </div>
 
           <div className="mt-7 flex items-center justify-center gap-5">
-            <Button variant="player" aria-label="Shuffle" onClick={() => setPlaylistOpen(true)}><Shuffle className="size-5" /></Button>
-            <Button variant="player" aria-label="Previous track" onClick={() => setPlaylistOpen(true)}><SkipBack className="size-5 fill-current" /></Button>
-            <Button variant="play" onClick={() => setPlaylistOpen(true)} aria-label={playlistOpen ? "Pause" : "Play"}>
-              {playlistOpen ? <Pause className="size-9 fill-current" /> : <Play className="ml-1 size-9 fill-current" />}
-            </Button>
-            <Button variant="player" aria-label="Next track" onClick={() => setPlaylistOpen(true)}><SkipForward className="size-5 fill-current" /></Button>
-            <Button variant="player" aria-label="Repeat" onClick={() => setPlaylistOpen(true)}><Repeat2 className="size-5" /></Button>
+            <Button variant="player" aria-label="Shuffle" disabled><Shuffle className="size-5" /></Button>
+            <Button variant="player" aria-label="Previous track" disabled><SkipBack className="size-5 fill-current" /></Button>
+            <Button variant="play" aria-label="Play" disabled><Play className="ml-1 size-9 fill-current" /></Button>
+            <Button variant="player" aria-label="Next track" disabled><SkipForward className="size-5 fill-current" /></Button>
+            <Button variant="player" aria-label="Repeat" disabled><Repeat2 className="size-5" /></Button>
           </div>
 
           <div className="mt-6 flex items-center gap-4">
