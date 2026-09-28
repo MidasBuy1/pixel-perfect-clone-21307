@@ -4,6 +4,7 @@ import {
   Heart,
   ListMusic,
   Music2,
+  Pause,
   Play,
   Repeat2,
   ShieldCheck,
@@ -12,10 +13,12 @@ import {
   SkipForward,
   Sparkles,
   Volume2,
+  VolumeX,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import song1 from "@/assets/audio/akhok-madrasa.mp3.asset.json";
 import musicBackground from "@/assets/music-background.jpg";
 import { Button } from "@/components/ui/button";
 
@@ -33,8 +36,56 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const tracks = [
+  { title: "اخوك مدرسه لما بروق بسبب حروق", artist: "Mohamed Elbosely feat. Ahmed Elswesy", src: song1.url },
+];
+
+function formatTime(s: number) {
+  if (!Number.isFinite(s)) return "00:00";
+  return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+}
+
 function Index() {
   const [playlistOpen, setPlaylistOpen] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [index, setIndex] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0.6);
+  const [muted, setMuted] = useState(false);
+  const [shuffle, setShuffle] = useState(false);
+  const [repeat, setRepeat] = useState(false);
+  const autoPlay = useRef(false);
+  const track = tracks[index] ?? tracks[0]!;
+
+  useEffect(() => { if (audioRef.current) audioRef.current.volume = muted ? 0 : volume; }, [volume, muted]);
+  useEffect(() => {
+    setCurrentTime(0);
+    if (autoPlay.current) audioRef.current?.play().catch(() => {});
+  }, [index]);
+
+  const togglePlay = () => {
+    const a = audioRef.current; if (!a) return;
+    if (a.paused) a.play().catch(() => {}); else a.pause();
+  };
+  const changeTrack = (i: number, play: boolean) => {
+    autoPlay.current = play;
+    if (i === index) { if (audioRef.current) { audioRef.current.currentTime = 0; if (play) audioRef.current.play().catch(() => {}); } }
+    else setIndex(i);
+  };
+  const nextIndex = () => shuffle && tracks.length > 1
+    ? (index + 1 + Math.floor(Math.random() * (tracks.length - 1))) % tracks.length
+    : (index + 1) % tracks.length;
+  const playNext = () => changeTrack(nextIndex(), playing);
+  const playPrevious = () => {
+    if ((audioRef.current?.currentTime ?? 0) > 3) { audioRef.current!.currentTime = 0; return; }
+    changeTrack((index - 1 + tracks.length) % tracks.length, playing);
+  };
+  const onEnded = () => {
+    if (repeat) { changeTrack(index, true); return; }
+    if (tracks.length > 1) changeTrack(nextIndex(), true);
+  };
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background font-body text-foreground">
@@ -80,27 +131,41 @@ function Index() {
         <div aria-hidden="true" />
 
         <div className="mt-auto flex flex-col justify-end pb-7 lg:pb-20">
+          <audio
+            ref={audioRef}
+            src={track.src}
+            preload="metadata"
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
+            onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+            onLoadedMetadata={(e) => { setDuration(e.currentTarget.duration); e.currentTarget.volume = muted ? 0 : volume; }}
+            onEnded={onEnded}
+          />
           <div className="relative flex items-center justify-between">
             <p className="font-script text-4xl text-primary">Now Playing ♡</p>
             <Button variant="ghost" aria-label="Open playlist" aria-expanded={playlistOpen} onClick={() => setPlaylistOpen((open) => !open)}>
               <ListMusic className="size-5" />
             </Button>
             {playlistOpen && (
-              <div className="absolute right-0 top-12 z-30 w-[min(22rem,calc(100vw-3rem))] rounded-lg border border-player-border bg-player-panel/95 px-6 py-8 text-center shadow-player-panel backdrop-blur-xl">
-                <Music2 className="mx-auto size-8 text-primary" />
-                <p className="mt-3 text-sm font-semibold">No songs uploaded yet</p>
+              <div className="absolute right-0 top-12 z-30 w-[min(22rem,calc(100vw-3rem))] rounded-lg border border-player-border bg-player-panel/95 p-3 shadow-player-panel backdrop-blur-xl">
+                {tracks.map((t, i) => (
+                  <button key={t.src} onClick={() => { changeTrack(i, true); setPlaylistOpen(false); }} className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm hover:bg-player-surface/60 ${i === index ? "text-primary" : ""}`}>
+                    <Music2 className="size-4 shrink-0" />
+                    <span className="truncate font-semibold" dir="auto">{t.title}</span>
+                  </button>
+                ))}
               </div>
             )}
           </div>
-          <h2 className="mt-2 text-3xl font-bold">Lost in the Beat</h2>
-          <p className="mt-1 text-sm text-primary">ANU Music</p>
+          <h2 className="mt-2 text-3xl font-bold" dir="auto">{track.title}</h2>
+          <p className="mt-1 text-sm text-primary" dir="auto">{track.artist}</p>
 
           <div className="mt-7">
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-player-surface/70">
-              <div className="h-full w-0 rounded-full bg-primary" />
-            </div>
+            <input type="range" aria-label="Seek" className="player-range w-full" min={0} max={duration || 0} step={0.1} value={currentTime}
+              style={{ ["--value" as string]: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+              onChange={(e) => { const v = Number(e.target.value); if (audioRef.current) audioRef.current.currentTime = v; setCurrentTime(v); }} />
           </div>
-          <div className="mt-1 flex justify-between text-[11px] font-medium"><span>00:00</span><span>00:00</span></div>
+          <div className="mt-1 flex justify-between text-[11px] font-medium"><span>{formatTime(currentTime)}</span><span>{formatTime(duration)}</span></div>
 
           <div className="mt-5 flex justify-center gap-3 text-[10px] font-semibold uppercase tracking-[0.12em]">
             <span className="flex items-center gap-2 rounded-full border border-player-border bg-player-surface/50 px-3 py-1.5"><Music2 className="size-3 text-primary" /> 320 KBPS</span>
@@ -108,16 +173,22 @@ function Index() {
           </div>
 
           <div className="mt-7 flex items-center justify-center gap-5">
-            <Button variant="player" aria-label="Shuffle" disabled><Shuffle className="size-5" /></Button>
-            <Button variant="player" aria-label="Previous track" disabled><SkipBack className="size-5 fill-current" /></Button>
-            <Button variant="play" aria-label="Play" disabled><Play className="ml-1 size-9 fill-current" /></Button>
-            <Button variant="player" aria-label="Next track" disabled><SkipForward className="size-5 fill-current" /></Button>
-            <Button variant="player" aria-label="Repeat" disabled><Repeat2 className="size-5" /></Button>
+            <Button variant="player" aria-label="Shuffle" aria-pressed={shuffle} className={shuffle ? "text-primary ring-2 ring-primary" : ""} onClick={() => setShuffle((s) => !s)}><Shuffle className="size-5" /></Button>
+            <Button variant="player" aria-label="Previous track" onClick={playPrevious}><SkipBack className="size-5 fill-current" /></Button>
+            <Button variant="play" aria-label={playing ? "Pause" : "Play"} onClick={togglePlay}>
+              {playing ? <Pause className="size-9 fill-current" /> : <Play className="ml-1 size-9 fill-current" />}
+            </Button>
+            <Button variant="player" aria-label="Next track" onClick={playNext}><SkipForward className="size-5 fill-current" /></Button>
+            <Button variant="player" aria-label="Repeat" aria-pressed={repeat} className={repeat ? "text-primary ring-2 ring-primary" : ""} onClick={() => setRepeat((r) => !r)}><Repeat2 className="size-5" /></Button>
           </div>
 
           <div className="mt-6 flex items-center gap-4">
-            <Volume2 className="size-5" aria-hidden="true" />
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-player-surface/70"><div className="h-full w-[58%] rounded-full bg-primary" /></div>
+            <button aria-label={muted ? "Unmute" : "Mute"} onClick={() => setMuted((m) => !m)}>
+              {muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
+            </button>
+            <input type="range" aria-label="Volume" className="player-range flex-1" min={0} max={1} step={0.01} value={muted ? 0 : volume}
+              style={{ ["--value" as string]: `${(muted ? 0 : volume) * 100}%` }}
+              onChange={(e) => { setVolume(Number(e.target.value)); setMuted(false); }} />
             <Volume2 className="size-6 fill-current" aria-hidden="true" />
           </div>
         </div>
