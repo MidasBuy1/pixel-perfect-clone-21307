@@ -77,10 +77,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ANU × MUSIC" },
+      { title: "SAIKO × MUSIC" },
+
       { name: "description", content: "Premium music player experience" },
-      { name: "author", content: "ANU Music" },
-      { property: "og:title", content: "ANU × MUSIC" },
+      { name: "author", content: "SAIKO Music" },
+      { property: "og:title", content: "SAIKO × MUSIC" },
       { property: "og:description", content: "Premium music player experience" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
