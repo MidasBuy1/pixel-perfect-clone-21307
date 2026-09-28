@@ -1,13 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Clock3,
-  ExternalLink,
   Heart,
+  ListMusic,
   Music2,
+  Pause,
+  Play,
+  Repeat2,
   ShieldCheck,
+  Shuffle,
+  SkipBack,
+  SkipForward,
   Sparkles,
+  Volume2,
   Zap,
 } from "lucide-react";
+import { useState } from "react";
 
 import musicBackground from "@/assets/music-background.jpg";
 import { Button } from "@/components/ui/button";
@@ -30,6 +38,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const [playlistOpen, setPlaylistOpen] = useState(false);
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-background font-body text-foreground">
       <img className="absolute inset-0 size-full object-cover object-center" src={musicBackground} alt="Woman enjoying music in a softly lit car" />
@@ -74,27 +84,57 @@ function Index() {
         <div aria-hidden="true" />
 
         <div className="mt-auto flex flex-col justify-end pb-7 lg:pb-20">
-          <div className="mb-4 flex items-end justify-between gap-4">
-            <div>
-              <p className="font-script text-4xl text-primary">Now Playing ♡</p>
-              <h2 className="mt-1 text-2xl font-bold">Your Spotify Playlist</h2>
-            </div>
-            <Button variant="player" size="icon" asChild>
-              <a href={spotifyPlaylistUrl} target="_blank" rel="noreferrer" aria-label="Open playlist on Spotify">
-                <ExternalLink className="size-4" />
-              </a>
+          <div className="relative flex items-center justify-between">
+            <p className="font-script text-4xl text-primary">Now Playing ♡</p>
+            <Button variant="ghost" aria-label="Open playlist" aria-expanded={playlistOpen} onClick={() => setPlaylistOpen((open) => !open)}>
+              <ListMusic className="size-5" />
             </Button>
+            {playlistOpen && (
+              <div className="absolute right-0 top-12 z-30 w-[min(22rem,calc(100vw-3rem))] overflow-hidden rounded-lg border border-player-border bg-player-panel/95 p-2 shadow-player-panel backdrop-blur-xl">
+                <iframe
+                  title="Spotify playlist"
+                  src={spotifyEmbedUrl}
+                  width="100%"
+                  height="352"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="eager"
+                  className="block w-full rounded-md border-0"
+                />
+                <Button variant="ghost" className="mt-1 h-8 w-full rounded-md text-xs" asChild>
+                  <a href={spotifyPlaylistUrl} target="_blank" rel="noreferrer">Open in Spotify</a>
+                </Button>
+              </div>
+            )}
           </div>
-          <div className="overflow-hidden rounded-lg border border-player-border bg-player-panel/80 shadow-player-panel backdrop-blur-xl">
-            <iframe
-              title="Spotify playlist"
-              src={spotifyEmbedUrl}
-              width="100%"
-              height="500"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="eager"
-              className="block w-full border-0"
-            />
+          <h2 className="mt-2 text-3xl font-bold">ANU Spotify Playlist</h2>
+          <p className="mt-1 text-sm text-primary">Spotify</p>
+
+          <div className="mt-7">
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-player-surface/70">
+              <div className="h-full w-[34%] rounded-full bg-primary" />
+            </div>
+          </div>
+          <div className="mt-1 flex justify-between text-[11px] font-medium"><span>01:24</span><span>03:45</span></div>
+
+          <div className="mt-5 flex justify-center gap-3 text-[10px] font-semibold uppercase tracking-[0.12em]">
+            <span className="flex items-center gap-2 rounded-full border border-player-border bg-player-surface/50 px-3 py-1.5"><Music2 className="size-3 text-primary" /> Spotify</span>
+            <span className="flex items-center gap-2 rounded-full border border-player-border bg-player-surface/50 px-3 py-1.5"><b className="text-primary">HQ</b> High quality</span>
+          </div>
+
+          <div className="mt-7 flex items-center justify-center gap-5">
+            <Button variant="player" aria-label="Shuffle" onClick={() => setPlaylistOpen(true)}><Shuffle className="size-5" /></Button>
+            <Button variant="player" aria-label="Previous track" onClick={() => setPlaylistOpen(true)}><SkipBack className="size-5 fill-current" /></Button>
+            <Button variant="play" onClick={() => setPlaylistOpen(true)} aria-label={playlistOpen ? "Pause" : "Play"}>
+              {playlistOpen ? <Pause className="size-9 fill-current" /> : <Play className="ml-1 size-9 fill-current" />}
+            </Button>
+            <Button variant="player" aria-label="Next track" onClick={() => setPlaylistOpen(true)}><SkipForward className="size-5 fill-current" /></Button>
+            <Button variant="player" aria-label="Repeat" onClick={() => setPlaylistOpen(true)}><Repeat2 className="size-5" /></Button>
+          </div>
+
+          <div className="mt-6 flex items-center gap-4">
+            <Volume2 className="size-5" aria-hidden="true" />
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-player-surface/70"><div className="h-full w-[58%] rounded-full bg-primary" /></div>
+            <Volume2 className="size-6 fill-current" aria-hidden="true" />
           </div>
         </div>
       </section>
