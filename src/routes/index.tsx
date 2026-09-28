@@ -24,8 +24,10 @@ import pinkHorizonAudio from "@/assets/audio/pink-horizon.mp3.asset.json";
 import musicBackground from "@/assets/music-background.jpg";
 import { Button } from "@/components/ui/button";
 
+const defaultTrack = { title: "Lost In The Beat", artist: "ANU Sessions", src: lostInTheBeatAudio.url, quality: "320 KBPS" };
+
 const tracks = [
-  { title: "Lost In The Beat", artist: "ANU Sessions", src: lostInTheBeatAudio.url, quality: "320 KBPS" },
+  defaultTrack,
   { title: "Pink Horizon", artist: "Velvet Drive", src: pinkHorizonAudio.url, quality: "HQ AUDIO" },
   { title: "Afterglow", artist: "Midnight Bloom", src: afterglowAudio.url, quality: "320 KBPS" },
 ];
@@ -55,7 +57,7 @@ function Index() {
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
   const [playlistOpen, setPlaylistOpen] = useState(false);
-  const track = tracks[trackIndex] ?? tracks[0];
+  const track = tracks[trackIndex] ?? defaultTrack;
 
   const formatTime = (seconds: number) => {
     if (!Number.isFinite(seconds)) return "00:00";
