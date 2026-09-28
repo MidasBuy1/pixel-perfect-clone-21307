@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Use a single immersive music-player screen with semantic pink-glass design tokens; this preserves the uploaded visual reference across responsive layouts.
