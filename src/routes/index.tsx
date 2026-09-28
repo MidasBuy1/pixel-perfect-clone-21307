@@ -25,9 +25,9 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ANU × MUSIC — Premium Music Experience" },
+      { title: "SAIKO × MUSIC — Premium Music Experience" },
       { name: "description", content: "Your ultimate music companion, active around the clock." },
-      { property: "og:title", content: "ANU × MUSIC" },
+      { property: "og:title", content: "SAIKO × MUSIC" },
       { property: "og:description", content: "A premium, always-on music experience." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -116,8 +116,8 @@ function Index() {
 
           <div className="mt-8 lg:mt-12">
             <p className="font-script text-4xl text-primary">Welcome To</p>
-            <h1 className="mt-[-10px] text-[clamp(4.7rem,8vw,8.2rem)] font-black italic leading-[0.7] text-primary drop-shadow-sm">
-              ANU
+            <h1 className="mt-[-10px] text-[clamp(3.4rem,7.4vw,7rem)] font-black italic leading-[0.7] tracking-tight text-primary drop-shadow-sm">
+              SAIKO
             </h1>
             <div className="my-2 text-center text-7xl font-black leading-none text-primary-foreground drop-shadow-player-x">×</div>
             <h2 className="text-[clamp(4rem,7vw,7rem)] font-black italic leading-[0.7] text-primary drop-shadow-sm">MUSIC</h2>
