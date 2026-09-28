@@ -1,5 +1,6 @@
 # Roadmap
 
-- [x] Replace the demo tracks with the supplied Spotify playlist.
-- [x] Delete all generated audio files from project storage.
-- [x] Verify the Spotify player in the preview and clear any errors.
+- [x] Remove the Spotify playlist and all third-party playback UI.
+- [x] Restore the original music-player presentation.
+- [x] Leave playback controls ready for user-uploaded songs.
+- [ ] Connect and verify the user's songs after they are uploaded.
