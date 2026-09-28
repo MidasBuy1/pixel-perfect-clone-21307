@@ -19,7 +19,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 import song1 from "@/assets/audio/akhok-madrasa.mp3.asset.json";
-import musicBackground from "@/assets/music-background.jpg";
+import song1Background from "@/assets/backgrounds/akhok-madrasa-background.jpg.asset.json";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -37,7 +37,13 @@ export const Route = createFileRoute("/")({
 });
 
 const tracks = [
-  { title: "اخوك مدرسه لما بروق بسبب حروق", artist: "Mohamed Elbosely feat. Ahmed Elswesy", src: song1.url },
+  {
+    title: "اخوك مدرسه لما بروق بسبب حروق",
+    artist: "Mohamed Elbosely feat. Ahmed Elswesy",
+    src: song1.url,
+    background: song1Background.url,
+    backgroundAlt: "Anime girl in a neon-lit gaming room",
+  },
 ];
 
 function formatTime(s: number) {
@@ -58,7 +64,9 @@ function Index() {
   const [repeat, setRepeat] = useState(false);
   const autoPlay = useRef(false);
   const seekingRef = useRef(false);
-  const track = tracks[index] ?? tracks[0]!;
+  const track = tracks[index] ?? tracks[0];
+
+  if (!track) return null;
 
   useEffect(() => { if (audioRef.current) audioRef.current.volume = muted ? 0 : volume; }, [volume, muted]);
   useEffect(() => {
@@ -84,7 +92,8 @@ function Index() {
     : (index + 1) % tracks.length;
   const playNext = () => changeTrack(nextIndex(), playing);
   const playPrevious = () => {
-    if ((audioRef.current?.currentTime ?? 0) > 3) { audioRef.current!.currentTime = 0; return; }
+    const audio = audioRef.current;
+    if ((audio?.currentTime ?? 0) > 3) { if (audio) audio.currentTime = 0; return; }
     changeTrack((index - 1 + tracks.length) % tracks.length, playing);
   };
   const onEnded = () => {
@@ -94,7 +103,7 @@ function Index() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background font-body text-foreground">
-      <img className="absolute inset-0 size-full object-cover object-center" src={musicBackground} alt="Woman enjoying music in a softly lit car" />
+      <img key={track.src} className="absolute inset-0 size-full object-cover object-center" src={track.background} alt={track.backgroundAlt} />
       <div className="absolute inset-0 bg-player-wash" />
 
       <div className="pointer-events-none absolute inset-0 hidden lg:block" aria-hidden="true">
