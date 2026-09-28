@@ -167,7 +167,7 @@ function Index() {
               style={{ ["--value" as string]: `${duration ? (currentTime / duration) * 100 : 0}%` }}
               onPointerDown={() => { seekingRef.current = true; }}
               onPointerUp={() => { seekingRef.current = false; }}
-              onChange={(e) => { const v = Number(e.target.value); const a = audioRef.current; if (a && Number.isFinite(v)) { if (typeof a.fastSeek === "function" && seekingRef.current) a.currentTime = v; else a.currentTime = v; } setCurrentTime(v); }} />
+              onChange={(e) => { const v = Number(e.target.value); const a = audioRef.current; if (a && Number.isFinite(v)) { a.currentTime = v; } setCurrentTime(v); }} />
           </div>
           <div className="mt-1 flex justify-between text-[11px] font-medium"><span>{formatTime(currentTime)}</span><span>{formatTime(duration)}</span></div>
 
