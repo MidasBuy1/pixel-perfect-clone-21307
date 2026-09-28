@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Use a single immersive music-player screen with semantic pink-glass design tokens; this preserves the uploaded visual reference across responsive layouts.
+- Use Spotify's official playlist embed as the sole audio source; it provides licensed playback without storing copied tracks.
