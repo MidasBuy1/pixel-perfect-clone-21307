@@ -21,6 +21,7 @@ import { useEffect, useRef, useState } from "react";
 import song1 from "@/assets/audio/akhok-madrasa.mp3.asset.json";
 import song2 from "@/assets/audio/malyon-khasara.mp3.asset.json";
 import song1Background from "@/assets/backgrounds/akhok-madrasa-background.jpg.asset.json";
+import firstBackground from "@/assets/music-background.jpg";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -49,8 +50,8 @@ const tracks = [
     title: "مليون خسارة لو كان البكاء على اللي راح",
     artist: "عمر حفظى و أوشا الصغير",
     src: song2.url,
-    background: song1Background.url,
-    backgroundAlt: "Anime girl in a neon-lit gaming room",
+    background: firstBackground,
+    backgroundAlt: "Woman wearing headphones inside a car",
   },
 ];
 
