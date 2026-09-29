@@ -50,8 +50,8 @@ const tracks = [
     title: "مليون خسارة لو كان البكاء على اللي راح",
     artist: "عمر حفظى و أوشا الصغير",
     src: song2.url,
-    background: song1Background.url,
-    backgroundAlt: "Anime girl in a neon-lit gaming room",
+    background: firstBackground,
+    backgroundAlt: "Woman wearing headphones inside a car",
   },
 ];
 
