@@ -19,6 +19,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 import song1 from "@/assets/audio/akhok-madrasa.mp3.asset.json";
+import song2 from "@/assets/audio/malyon-khasara.mp3.asset.json";
 import song1Background from "@/assets/backgrounds/akhok-madrasa-background.jpg.asset.json";
 import { Button } from "@/components/ui/button";
 
@@ -41,6 +42,13 @@ const tracks = [
     title: "اخوك مدرسه لما بروق بسبب حروق",
     artist: "Mohamed Elbosely feat. Ahmed Elswesy",
     src: song1.url,
+    background: song1Background.url,
+    backgroundAlt: "Anime girl in a neon-lit gaming room",
+  },
+  {
+    title: "مليون خسارة لو كان البكاء على اللي راح",
+    artist: "عمر حفظى و أوشا الصغير",
+    src: song2.url,
     background: song1Background.url,
     backgroundAlt: "Anime girl in a neon-lit gaming room",
   },
