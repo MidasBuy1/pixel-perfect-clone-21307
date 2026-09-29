@@ -21,6 +21,7 @@ import { useEffect, useRef, useState } from "react";
 import song1 from "@/assets/audio/akhok-madrasa.mp3.asset.json";
 import song2 from "@/assets/audio/malyon-khasara.mp3.asset.json";
 import song1Background from "@/assets/backgrounds/akhok-madrasa-background.jpg.asset.json";
+import firstBackground from "@/assets/music-background.jpg";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
